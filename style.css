@@ -1,0 +1,479 @@
+.reveal{
+    position: relative;
+    transform: translateY(150px);
+    opacity: 0;
+    transition: all 2s ease;
+}
+
+.reveal.active{
+    transform: translateY(0px);
+    opacity: 1;
+}
+
+.bghaha{
+    background-color: black;
+}
+.card.divider {
+  background: rgba(255, 255, 255, 0.5); /* 50% opacity white background */
+  backdrop-filter: blur(10px); /* adds blur effect */
+  -webkit-backdrop-filter: blur(10px); /* for Safari compatibility */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* optional subtle border */
+  border-radius: 12px; /* optional rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* optional soft shadow */
+}
+
+.card.divider {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+/* BUTTON ALIGNMENT */
+.see-more-btn {
+  display: block;
+  margin-left: auto;   /* pushes it to the right */
+  margin-right: 0;
+  width: fit-content;  /* keeps button tight around text */
+}
+
+/* RESPONSIVE: CENTER ON MOBILE */
+@media (max-width: 768px) {
+  .see-more-btn {
+    margin: 0 auto;    /* centers it horizontally */
+  }
+}
+
+.btn-container {
+  display: flex;
+  justify-content: flex-end; /* align right */
+}
+
+@media (max-width: 768px) {
+  .btn-container {
+    justify-content: center; /* center on mobile */
+  }
+}
+
+/* Optional button styling */
+.see-more-btn {
+  width: fit-content;
+}
+.video-containers {
+  position: relative; /* This anchors the overlay properly */
+  display: inline-block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* black with opacity */
+  z-index: 2; /* make sure it’s above the image */
+}
+  .back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 14px;
+  border-radius: 8px;
+  z-index: 1000;
+  transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.plus-icon,
+.plus-icon2 {
+  position: absolute;
+  z-index: 3; /* above overlay */
+  color: white;
+}
+
+
+.plus-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+    z-index: 2; /* above the image */
+}
+.plus-icon2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 15rem;
+  color: rgba(255, 255, 255, 0.358);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+    z-index: 2; /* above the image */
+}
+.video-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+
+
+#landing {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.videocontent {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.videocontent video {
+    width: 100vw; /* Make the video width 100% of the container */
+    height: auto; /* Maintain the video's aspect ratio */
+    display: block;
+}
+
+
+nav.navbar{
+position: absolute;
+z-index: 1;
+background-color: #ffffff4b !important;
+width: 100%;
+}
+
+.navbar-nav {
+    margin-left: auto;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+#about{
+    padding: 30px;
+}
+#about .container{
+    display: flex;
+    min-height: 320px;
+    align-items: center;
+    justify-content: center;
+}
+
+#about .box1{
+    flex: 1;
+    min-height: 180px;
+    display: flex;
+    height: 320px;
+    align-items: center;
+    justify-content: center;
+}
+
+#about .box2{
+    flex: 2;
+    min-height: 180px;
+}
+
+.aboutvdl{
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+
+@media (max-width: 995px){
+    #about .container{
+        flex-direction: column;
+    }
+    .aboutvdl{
+        text-align: center;
+    }
+    .aboutvdlp{
+        margin-bottom: 20px;
+    }
+    #about .box1{
+        margin-bottom: 50px;
+        margin-top: 50px;
+    }
+    #about .box2{
+        margin-bottom: 20%;
+    }
+}
+
+#works{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+#works .videos{
+    display: flex;
+}
+
+#works .v2 {
+    margin: 0%;
+    flex-grow: 1; /* Allow videos to grow and fill available space */
+    min-width: calc(33.33% - 20px); /* Distribute videos evenly while considering margin */
+    width: 100%; /* Ensure videos fill the available space */
+    height: 100%;
+    background: rgba(255, 255, 255, 0);
+
+   
+
+}
+
+
+
+#works h1{
+    font-family: sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 20px;
+    color: rgba(240, 248, 255, 0.425);
+    margin-top: 5%;
+    margin-bottom: 1.5%;
+    text-align: center;
+}
+
+#works h2{
+    font-family: sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    color: rgb(201 201 201);
+    margin-top: 1%;
+    text-align: left;
+  
+}
+
+@media (max-width: 995px){
+    #works .videos{
+        flex-direction: column;
+    }
+}
+
+#works p{
+margin-bottom: 0%;
+}
+
+.raite123{
+    font-size: 75%;
+}
+
+.v2{
+    background: rgba(255, 255, 255, 0.596);
+
+}
+
+
+.v2:hover {
+    transform: scale(1.2);
+    z-index: 1;
+  }
+
+  .v1{
+    background: rgba(255, 255, 255, 0.63);
+
+}
+
+.pictures{
+    display: flex;
+    gap: 20px;
+    padding: 2%;
+}
+
+.col1{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.photo img{
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    box-shadow:
+    0px 4px 6px rgba(0, 0, 0, 0.1),
+    0px 8px 12px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+}
+
+
+.photo:hover {
+    transform: scale(1.5);
+    z-index: 1;
+  }
+
+  @media (max-width: 995px){
+    .pictures{
+        flex-direction: column;
+    }
+
+    .photo:hover {
+        transform: scale(1.1);
+        z-index: 1;
+      }
+}
+
+.attr{
+    background-image: url(assets/photo/skills3.png);
+}
+.bgworks{
+height: 100%;
+width: 100%;
+background-size: cover;
+}
+
+#contact{
+    padding: 5%;
+    text-align: center;
+}
+
+#contact .hello{
+color: rgba(240, 248, 255, 0.726);
+}
+
+#contact h3{
+    font-family: ui-rounded;
+    font-size: 20px;
+    }
+
+    #contact p{
+        font-family: none;
+        font-size: 18px;
+        }
+
+
+        .v2 iframe {
+            width: 100%;
+            height: 56.25%; /* 16:9 aspect ratio */
+        }
+
+       .video-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 ratio */
+  overflow: hidden;
+  background: #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Make the image fill but not affect size */
+.see-more-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* keeps aspect ratio, crops if needed */
+  z-index: 1;
+}
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+
+        @media (max-width: 575px){
+            #works .v2{
+                margin-bottom: 5%;
+            }
+        }
+
+        #works h5 {
+           margin-bottom: 0%;
+        }
+
+
+          .drive-button {
+            display: inline-block;
+            padding: 15px 25px;
+            background-color: #ffffff21; /* Google Blue */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 20px;
+            color: rgba(240, 248, 255, 0.425);
+            margin-top: 5%;
+            text-align: center;
+        }
+
+        .drive-button h2 {
+            margin: 0; /* Remove default margin from h2 */
+            font-size: 20px;
+            padding: 0; /* Adjust font size for the button */
+            font-weight: normal; /* Optional: Make the text weight lighter */
+        }
+
+        .drive-button:hover {
+            background-color: rgb(70, 70, 70); /* Slightly darker blue on hover */
+        }
+
+
+        .video-containers {
+            position: relative;
+            width: 100%; /* Adjust width as needed */
+            padding-top: 177.78%; /* Aspect ratio for 1080x1920 (1920/1080 * 100%) */
+            overflow: hidden;
+            border-radius: 6px; /* Optional for rounded corners */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+         .video-containers.wow{
+            position: relative;
+            width: 100%; /* Adjust width as needed */
+            padding-top: 0%; /* Aspect ratio for 1080x1920 (1920/1080 * 100%) */
+            overflow: hidden;
+            border-radius: 6px; /* Optional for rounded corners */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-containers iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+.sec1 {
+  background: linear-gradient(to bottom, rgba(128,128,128,0.8) 0%, rgba(128,128,128,0) 100%);
+  background: linear-gradient(to bottom left, rgba(128,128,128,0.8), rgba(128,128,128,0)),
+              linear-gradient(to bottom right, rgba(128,128,128,0.8), rgba(128,128,128,0));
+  background-blend-mode: screen;
+  padding: 1%;
+}
+

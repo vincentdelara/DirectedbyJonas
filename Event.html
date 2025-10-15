@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event</title>
+<style>
+  :root {
+    --bg-color: #000;
+    --text-color: #fff;
+    --gap: 16px;
+    --thumb-radius: 12px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+
+  /* Grid layout */
+  .video-grid {
+    display: grid;
+    gap: var(--gap);
+  }
+
+  /* Horizontal videos: 4 per row */
+  .horizontal-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Vertical videos: 5 per row */
+  .vertical-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .horizontal-grid { grid-template-columns: repeat(3, 1fr); }
+    .vertical-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .horizontal-grid { grid-template-columns: repeat(2, 1fr); }
+    .vertical-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .horizontal-grid, .vertical-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Video thumbnail */
+  .video-thumb {
+    position: relative;
+    width: 100%;
+    background: #000;
+    overflow: hidden;
+    border-radius: var(--thumb-radius);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .video-thumb.horizontal {
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-thumb.vertical {
+    aspect-ratio: 9 / 16;
+  }
+
+  .video-thumb:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .video-thumb iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    border: none;
+    object-fit: cover;
+    border-radius: var(--thumb-radius);
+    background: #000;
+  }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal iframe {
+    width: 70%;
+    max-width: 1200px;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+   .back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 14px;
+  border-radius: 8px;
+  z-index: 10000; /* very high so it's above other elements */
+  transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+</head>
+<body>
+<a href="https://directedbyjonasaubrey.vercel.app" class="back-btn">&#8592; Back</a>
+<h1>EVENT</h1>
+
+<h2></h2>
+<div class="video-grid horizontal-grid" id="horizontalGrid"></div>
+
+<h2></h2>
+<div class="video-grid vertical-grid" id="verticalGrid"></div>
+
+<!-- Modal -->
+<div class="modal" id="videoModal">
+  <span class="close" id="closeModal">&times;</span>
+  <iframe id="videoPlayer" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<script>
+const horizontalVideos = [
+  "https://www.youtube.com/embed/Mg8_OV3XCV8",
+  "https://drive.google.com/file/d/1o8RPHJGUaJDhGkmbpORneqzztOpdmJH0/preview",
+  "https://drive.google.com/file/d/1pv99fPurXFhw1dSMc8VCbH0zp8Y1Ts2r/preview",
+  "https://drive.google.com/file/d/13JZLu-LT12Y6B5cvncZfn-o9EseXpZjd/preview",
+  "https://drive.google.com/file/d/1YBzQe4P4RSppqtK5C3WTC0jIGAtHm1vp/preview",
+  "https://drive.google.com/file/d/1dkLBPw6eFVfKBrTWyWPLLtxOTW10S-3I/preview",
+  "https://drive.google.com/file/d/1ZqrsAjhvqD9cwgEkbsVYwxVzp5khb-Xy/preview",
+  "https://drive.google.com/file/d/1167wl8N_Eqrxb8kicqpV6bbNyzAKw3SN/preview",
+  "https://drive.google.com/file/d/1fUp4PblsNc8aGqmKtIOC3MBYqKeiVl0q/preview",
+  "https://drive.google.com/file/d/1eE46s2dNSa40ob8-h7CyENunhbGyG3mo/preview",
+  "https://drive.google.com/file/d/1WMJgjonPifm4cQrBfadPMCEtrVj-RzNQ/preview",
+  "https://drive.google.com/file/d/1lHE2lhuyYz_8cML8Yg6WbhcWuvgxf_eh/preview",
+  "https://drive.google.com/file/d/1d0pmG04C57FWkDb8cHcWjyCD2Kf5gjQm/preview",
+  "https://drive.google.com/file/d/1gn_tlQ7B_KTTfYlmbJb5VinIsIwqWRbX/preview"
+];
+
+const verticalVideos = [
+  "https://drive.google.com/file/d/1ki9l-QqM7yjosSWvFj8TFbnVe7dMixSV/preview",
+  "https://drive.google.com/file/d/1ej74bOJ0VjvXC2owyNocONUxlp9s3c9a/preview",
+  "https://drive.google.com/file/d/1qZPiyFstycsW54WROcIVT_aLlD5_tabq/preview",
+  "https://drive.google.com/file/d/1IUh1t1Ba_f7BYs9pjJo_9jWgZXBw6y6N/preview",
+  "https://drive.google.com/file/d/1DJrLHAzPdQSaQ2JW6ELQG21BNt_7KJBL/preview",
+  "https://drive.google.com/file/d/1mclqGmsT-t_oTtyjzc6zvuqJQfLopFOX/preview",
+  "https://drive.google.com/file/d/152C35KXedrUrS70wKsZT_k8eH9I0NjzE/preview",
+  "https://drive.google.com/file/d/1UBFSKyowNIEK6V3nXZkXLrfpaVAuZNQQ/preview"
+];
+
+const createThumb = (gridId, url, type) => {
+  const grid = document.getElementById(gridId);
+  const div = document.createElement('div');
+  div.className = `video-thumb ${type}`;
+  div.innerHTML = `<iframe data-src="${url}" loading="lazy" allow="autoplay" allowfullscreen></iframe>`;
+  div.addEventListener('click', () => {
+    document.getElementById('videoPlayer').src = url.includes("youtube") ? url + "?autoplay=1" : url + "?autoplay=1";
+    document.getElementById('videoModal').style.display = "flex";
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const iframe = entry.target.querySelector('iframe[data-src]');
+        if(iframe){
+          iframe.src = iframe.dataset.src;
+          iframe.removeAttribute('data-src');
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+  observer.observe(div);
+  grid.appendChild(div);
+};
+
+// Add horizontal videos
+horizontalVideos.forEach(url => createThumb('horizontalGrid', url, 'horizontal'));
+
+// Add vertical videos
+verticalVideos.forEach(url => createThumb('verticalGrid', url, 'vertical'));
+
+// Modal close
+const closeModal = () => {
+  document.getElementById('videoModal').style.display = "none";
+  document.getElementById('videoPlayer').src = "";
+};
+
+document.getElementById('closeModal').onclick = closeModal;
+window.onclick = e => e.target === document.getElementById('videoModal') && closeModal();
+</script>
+
+</body>
+</html>
