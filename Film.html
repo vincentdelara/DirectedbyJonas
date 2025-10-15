@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Film</title>
+<style>
+  :root {
+    --bg-color: #000;
+    --text-color: #fff;
+    --gap: 16px;
+    --thumb-radius: 12px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+
+  /* Grid layout — 3 per row on large screens */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+  }
+
+  .video-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+    border-radius: var(--thumb-radius);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .video-thumb:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .video-thumb iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    border: none;
+    object-fit: cover;
+    background: #000;
+    border-radius: var(--thumb-radius);
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal iframe {
+    width: 70%;
+    height: 70%;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 900px) {
+    .video-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+   .back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 14px;
+  border-radius: 8px;
+  z-index: 10000; /* very high so it's above other elements */
+  transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+</head>
+<body>
+<a href="https://directedbyjonasaubrey.vercel.app" class="back-btn">&#8592; Back</a>
+<h1> FILM</h1>
+
+<div class="video-grid" id="videoGrid"></div>
+
+<!-- Modal -->
+<div class="modal" id="videoModal">
+  <span class="close" id="closeModal">&times;</span>
+  <iframe id="videoPlayer" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<script>
+const videos = [
+  "https://www.youtube.com/embed/dNVZKzWwaS0?start=414",
+  "https://www.youtube.com/embed/gyJD05RNwk0?start=7",
+  "https://www.youtube.com/embed/5UhWVuxGOI8?start=72",
+  "https://www.youtube.com/embed/gVlkDzO7PqE?start=2153",
+  "https://www.youtube.com/embed/N8nU4VU8pCE?start=252",
+  "https://www.youtube.com/embed/AaFDJ460aik",
+  "https://www.youtube.com/embed/MWFDyPWu3VU",
+  "https://www.youtube.com/embed/VLuKWEZXxUo",
+  "https://www.youtube.com/embed/L-cqzUzGzzI",
+  "https://www.youtube.com/embed/Z5LKp0JHSLM",
+  "https://www.youtube.com/embed/YwZurgLTTnk",
+  "https://drive.google.com/file/d/13ZJZwyIVqKZa5ygRTY0RS6FdntcCTMKF/preview",
+  "https://drive.google.com/file/d/1NvSdDLdxKFY4qn9_eNSIKElcTOc6vw9a/preview",
+  "https://drive.google.com/file/d/1i6QhZQyty99fsAOp97Oh8sEIc-VJl4hg/preview",
+  "https://drive.google.com/file/d/1PlEPHcp8lBkgWhJ4oyoU_yfq2_QMOvzj/preview",
+  "https://drive.google.com/file/d/1od6EyIPH_OEa_nn3Sm3bsHq4ZJM0yRx6/preview"
+];
+
+const grid = document.getElementById('videoGrid');
+const modal = document.getElementById('videoModal');
+const videoPlayer = document.getElementById('videoPlayer');
+const closeModal = document.getElementById('closeModal');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const iframe = entry.target.querySelector("iframe[data-src]");
+      if (iframe) {
+        iframe.src = iframe.dataset.src;
+        iframe.removeAttribute("data-src");
+      }
+      observer.unobserve(entry.target);
+    }
+  });
+});
+
+videos.forEach(link => {
+  const div = document.createElement('div');
+  div.className = 'video-thumb';
+  div.innerHTML = `<iframe data-src="${link}" loading="lazy" allow="autoplay" allowfullscreen></iframe>`;
+  div.addEventListener('click', () => {
+    videoPlayer.src = `${link}?autoplay=1`;
+    modal.style.display = "flex";
+  });
+  observer.observe(div);
+  grid.appendChild(div);
+});
+
+const close = () => {
+  modal.style.display = "none";
+  videoPlayer.src = "";
+};
+
+closeModal.onclick = close;
+window.onclick = e => e.target === modal && close();
+</script>
+
+</body>
+</html>

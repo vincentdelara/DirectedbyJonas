@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advertisement</title>
+<style>
+  :root {
+    --bg-color: #000;
+    --text-color: #fff;
+    --gap: 16px;
+    --thumb-radius: 12px;
+  }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+
+  h2 {
+    margin-top: 40px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    border-left: 4px solid #fff;
+    padding-left: 10px;
+  }
+
+  /* Grid layout */
+  .video-grid {
+    display: grid;
+    gap: var(--gap);
+  }
+
+  /* 🟢 Horizontal grid now 2 per row */
+  .horizontal-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .vertical-grid { grid-template-columns: repeat(5, 1fr); }
+  .square-grid { grid-template-columns: repeat(6, 1fr); }
+
+  @media (max-width: 1200px) {
+    .vertical-grid { grid-template-columns: repeat(4, 1fr); }
+    .square-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .vertical-grid { grid-template-columns: repeat(3, 1fr); }
+    .square-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .horizontal-grid, .vertical-grid, .square-grid { grid-template-columns: repeat(1, 1fr); }
+  }
+
+  /* Video thumbnail */
+  .video-thumb {
+    position: relative;
+    width: 100%;
+    background: #000;
+    overflow: hidden;
+    border-radius: var(--thumb-radius);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .video-thumb.horizontal { aspect-ratio: 16 / 9; }
+  .video-thumb.vertical { aspect-ratio: 9 / 16; }
+  .video-thumb.square { aspect-ratio: 1 / 1; }
+
+  .video-thumb:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .video-thumb iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    border: none;
+    object-fit: cover;
+    border-radius: var(--thumb-radius);
+    background: #000;
+  }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal iframe {
+    width: 70%;
+    max-width: 1200px;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 14px;
+  border-radius: 8px;
+  z-index: 10000; /* very high so it's above other elements */
+  transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+
+</style>
+</head>
+<body>
+<a href="https://directedbyjonasaubrey.vercel.app" class="back-btn">&#8592; Back</a>
+<h1>ADVERTISEMENT</h1>
+
+<h2> </h2>
+<div class="video-grid horizontal-grid" id="horizontalGrid"></div>
+
+<h2> </h2>
+<div class="video-grid vertical-grid" id="verticalGrid"></div>
+
+<h2> </h2>
+<div class="video-grid square-grid" id="squareGrid"></div>
+
+<!-- Modal -->
+<div class="modal" id="videoModal">
+  <span class="close" id="closeModal">&times;</span>
+  <iframe id="videoPlayer" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<script>
+const horizontalVideos = [
+  "https://www.youtube.com/embed/inqDVtJ_CBQ",
+  "https://www.youtube.com/embed/EFB6NBP4NPs",
+  "https://drive.google.com/file/d/1EHbr2dfiUdI-CxUr71T3HVSeVEMx-j8c/preview",
+  "https://drive.google.com/file/d/105LtWiqejh7R5otcNSG6VvDeA-jZWPso/preview",
+  "https://drive.google.com/file/d/1osjy_L0eu5uU3UX78AkYTRaiF9Enn7W-/preview",
+  "https://drive.google.com/file/d/1pwghrpHx6EiX9J8SlGDJ4BCzlCi0PHzV/preview",
+  "https://drive.google.com/file/d/1dQ9mGCjVClkO5qaecJ8hPyqibaN6cipC/preview",
+  "https://drive.google.com/file/d/1qgQfQL8fsnWM-hpFXl075axKO0YRzh6B/preview",
+  "https://drive.google.com/file/d/1U0UFn1g8lWdAM2lzmOCTqTW09mclyFMR/preview",
+  "https://drive.google.com/file/d/1jO_8Y2imBJ1k37ibkuLZJqZPuSFLvuc5/preview",
+  "https://drive.google.com/file/d/1kyCOYpHD4r3lMDMDxdWMstk-6RvZm5OD/preview",
+  "https://drive.google.com/file/d/1Qp8_v8wqoqO9LUasabSYhHJ37RRn9fPB/preview",
+  "https://drive.google.com/file/d/1Dx636pwdkcXDu7kNK_VOBwXPBGQeu7K-/preview",
+  "https://drive.google.com/file/d/1kLAIfXD9NjUHkRHkkrCP17zSCNPA-d1t/preview",
+  "https://drive.google.com/file/d/15Hp0u0qrPvKTdGNNCSLlyWG-Vl1sNusD/preview",
+  "https://drive.google.com/file/d/1opJV_zA3CYcaAA-i7G4g0AgkSaxfVrvG/preview",
+  "https://drive.google.com/file/d/1JF6tLfLTI8isiFWm1KtQLUm0VoFTws_V/preview",
+  "https://drive.google.com/file/d/1YR51Um9N419mJeT6DCWPBdLrDXGbhdVR/preview",
+  "https://drive.google.com/file/d/1YY_EjAzhFD6AyV4_R-wRFt3zKkuhXLbO/preview",
+  "https://drive.google.com/file/d/1WZ0lkVz65TrGqQpAgrACjUBKSKHtrjTT/preview"
+];
+
+const verticalVideos = [
+  "https://www.tiktok.com/embed/7535777069121146130",
+  "https://www.tiktok.com/embed/7374709012220120326",
+  "https://www.tiktok.com/embed/7423699042879720711",
+  "https://www.tiktok.com/embed/7418525486092930311",
+  "https://www.tiktok.com/embed/7555472918138948882",
+  "https://drive.google.com/file/d/1SXJRD_I849GID8tLRr-tfStI7kVFDHgx/preview",
+  "https://drive.google.com/file/d/19B7tjlwcNssMJEbSJ7yRdG_AFQln0nc5/preview",
+  "https://drive.google.com/file/d/1QzocnEwi8qiwDZEhTTNWw4cHFwvPqbD3/preview",
+  "https://drive.google.com/file/d/1LNY2wcnIPNxldmslAIdiWXvYJ0MMvLR1/preview",
+  "https://drive.google.com/file/d/1XPCYGH9FEJ7k0lGEQBW-XO1ZoFeKNv8R/preview",
+  "https://drive.google.com/file/d/1ICim-grBR15V0HQDFofqtGQRH_8cnAJn/preview",
+  "https://drive.google.com/file/d/1FcsMjP5X4DsNf0si5zgUz-hAii-RsFHY/preview",
+  "https://drive.google.com/file/d/1tAARlRUNDOhN2tAnmQiR6kKXdkJvgql9/preview",
+  "https://drive.google.com/file/d/1OYdQeWcupC2DjXvG5S2-fiLuu5TG0Ph_/preview",
+  "https://drive.google.com/file/d/1gWPIRDvoyj3pZureA-JwACCIawdX_guu/preview",
+  "https://drive.google.com/file/d/1WOprEXp2OFHR6ci_XCThAwwmfP3uCAK8/preview",
+  "https://drive.google.com/file/d/1hwLTF0bMpM6iMpyrMCtavmlJ_6lMv6Np/preview",
+  "https://drive.google.com/file/d/1OaOuGBqAweez-3QQJx48DTbQmOL6hbPW/preview",
+  "https://drive.google.com/file/d/1ZdAt5lmLtwIDZuY7tFToP3RdHXN0SYhC/preview",
+  "https://drive.google.com/file/d/1BdVDhr3uY9kUSxrkYYoTvBYC14M45pI3/preview",
+  "https://drive.google.com/file/d/1PZ0xiGdY2h_0Ccsj3r7ofhxwXtIhQ4YO/preview",
+  "https://drive.google.com/file/d/1v3oC-hAQtXOS8Dil5cAg28FElswLkrjX/preview",
+  "https://drive.google.com/file/d/1Qyf49Da8s5flRu43NqS2vp8qTEJ54yu-/preview",
+  "https://drive.google.com/file/d/1YfQR5_8qhH2hnAUhhwoYGxM9eicMftQ8/preview",
+  "https://drive.google.com/file/d/1kbE-f9nnY0YTiOuSe2McGokOh-W4Zlzn/preview"
+];
+
+const squareVideos = [
+  "https://drive.google.com/file/d/1u1TactiWrv5dshd_sWL9l2TKX1Dkl5Ux/preview",
+  "https://drive.google.com/file/d/1C-ik0x8AIY0-pAlPfgz8I-ez3T1nlKpV/preview"
+];
+
+const createThumb = (gridId, url, type) => {
+  const grid = document.getElementById(gridId);
+  const div = document.createElement('div');
+  div.className = `video-thumb ${type}`;
+  div.innerHTML = `<iframe data-src="${url}" loading="lazy" allow="autoplay" allowfullscreen></iframe>`;
+  div.addEventListener('click', () => {
+    document.getElementById('videoPlayer').src = url + "?autoplay=1";
+    document.getElementById('videoModal').style.display = "flex";
+  });
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const iframe = entry.target.querySelector('iframe[data-src]');
+        if (iframe) {
+          iframe.src = iframe.dataset.src;
+          iframe.removeAttribute('data-src');
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+  observer.observe(div);
+  grid.appendChild(div);
+};
+
+horizontalVideos.forEach(url => createThumb('horizontalGrid', url, 'horizontal'));
+verticalVideos.forEach(url => createThumb('verticalGrid', url, 'vertical'));
+squareVideos.forEach(url => createThumb('squareGrid', url, 'square'));
+
+const closeModal = () => {
+  document.getElementById('videoModal').style.display = "none";
+  document.getElementById('videoPlayer').src = "";
+};
+document.getElementById('closeModal').onclick = closeModal;
+window.onclick = e => e.target === document.getElementById('videoModal') && closeModal();
+</script>
+
+</body>
+</html>

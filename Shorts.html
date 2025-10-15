@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shorts</title>
+<style>
+  :root {
+    --bg: #000;
+    --fg: #fff;
+    --gap: 14px;
+    --radius: 12px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+  }
+
+  h2 {
+    margin-top: 35px;
+    margin-bottom: 15px;
+    border-left: 4px solid #fff;
+    padding-left: 10px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--gap);
+    justify-items: center;
+  }
+
+  .video-thumb {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #000;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Preserve actual aspect ratios */
+  .video-thumb.horizontal { aspect-ratio: 16 / 9; }
+  .video-thumb.square { aspect-ratio: 1 / 1; }
+  .video-thumb.vertical { aspect-ratio: 9 / 16; }
+
+  .video-thumb:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: contain;
+    background: #000;
+  }
+
+  /* Lightbox modal */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  .modal iframe {
+    width: 90%;
+    max-width: 900px;
+    height: 90vh;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .close {
+    position: absolute;
+    top: 25px;
+    right: 40px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 15px; }
+    .close { top: 20px; right: 25px; }
+  }
+   .back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 14px;
+  border-radius: 8px;
+  z-index: 10000; /* very high so it's above other elements */
+  transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+</head>
+<body>
+<a href="https://directedbyjonasaubrey.vercel.app" class="back-btn">&#8592; Back</a>
+<h1>SHORTS</h1>
+
+<h2> </h2>
+<div class="video-grid" id="horizontalGrid"></div>
+
+<h2> </h2>
+<div class="video-grid" id="squareGrid"></div>
+
+<h2> </h2>
+<div class="video-grid" id="verticalGrid"></div>
+
+<!-- Modal -->
+<div class="modal" id="videoModal">
+  <span class="close" id="closeModal">&times;</span>
+  <iframe id="videoPlayer" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<script>
+/* ---------------------------------------------
+   Define videos by type
+--------------------------------------------- */
+const horizontal = [
+  "https://drive.google.com/file/d/13hyjxyjaH9gAmlxsmbFkCwGswed-_wvC/preview",
+  "https://drive.google.com/file/d/1iucjnEJmBK3Eox5NC5l5e1bISoSfQ7Lp/preview"
+];
+
+const square = [
+  "https://drive.google.com/file/d/1Kd2XZ0wp8k3VBEWZBdajiI1t5RXd6Pgl/preview",
+  "https://drive.google.com/file/d/1QTKkxX-n9CK9Lih0AxJaiac4f2mjlzm9/preview",
+  "https://drive.google.com/file/d/1XAYas2g3nMvbW40myi5g1_0CMgKJTMIg/preview",
+  "https://drive.google.com/file/d/1QGI9gGRxZ_k73grmvQSTZVu-r6Gaf-Bo/preview",
+  "https://drive.google.com/file/d/1xwjFPa09Zt5yVkB4r64k-gYIv5cndiec/preview"
+];
+
+const vertical = [
+  "https://drive.google.com/file/d/1PPPd9vL0fkXvDQL9ZQ2ReGx5dXu9M2St/preview",
+  "https://drive.google.com/file/d/1c9_UV_GIE1obIZDxiz0QCvfQV3Hk15lO/preview"
+];
+
+/* ---------------------------------------------
+   Generate grids dynamically
+--------------------------------------------- */
+function renderVideos(videoList, containerId, type) {
+  const container = document.getElementById(containerId);
+  videoList.forEach(url => {
+    const div = document.createElement("div");
+    div.className = `video-thumb ${type}`;
+    div.innerHTML = `<iframe src="${url}" loading="lazy" allow="autoplay" allowfullscreen></iframe>`;
+
+    div.addEventListener("click", () => {
+      document.getElementById("videoPlayer").src = url + "?autoplay=1";
+      document.getElementById("videoModal").style.display = "flex";
+    });
+
+    container.appendChild(div);
+  });
+}
+
+renderVideos(horizontal, "horizontalGrid", "horizontal");
+renderVideos(square, "squareGrid", "square");
+renderVideos(vertical, "verticalGrid", "vertical");
+
+/* ---------------------------------------------
+   Modal controls
+--------------------------------------------- */
+const closeModal = () => {
+  document.getElementById("videoModal").style.display = "none";
+  document.getElementById("videoPlayer").src = "";
+};
+document.getElementById("closeModal").onclick = closeModal;
+window.onclick = e => e.target === document.getElementById("videoModal") && closeModal();
+</script>
+
+</body>
+</html>
