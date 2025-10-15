@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music Video</title>
+<style>
+  :root {
+    --bg-color: #000;
+    --text-color: #fff;
+    --gap: 16px;
+    --thumb-radius: 12px;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2rem;
+    letter-spacing: 1px;
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+  }
+
+  .video-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--thumb-radius);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #111 url('https://upload.wikimedia.org/wikipedia/commons/7/70/YouTube_play_button_icon_(white).svg') no-repeat center;
+    background-size: 60px 60px;
+  }
+
+  .video-thumb:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 900px) {
+    .video-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+    .back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 14px;
+  border-radius: 8px;
+  z-index: 10000; /* very high so it's above other elements */
+  transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+</head>
+<body>
+<a href="index.html" class="back-btn">&#8592; Back</a>
+<h1>Music Video</h1>
+
+<div class="video-grid" id="videoGrid"></div>
+
+<script>
+const videos = [
+  { type: 'youtube', id: 'MUfwW6nKNhQ' },
+  { type: 'youtube', id: '-V0KfcGrEcw' },
+  { type: 'youtube', id: 'G9omKZFYnAg' },
+  { type: 'youtube', id: 'JuCj_2U4u7s' },
+  { type: 'youtube', id: 's1B2To7WRTQ' },
+  { type: 'youtube', id: 'PnJpBs1-nmg' },
+  { type: 'youtube', id: 'flSIrdnmPiU' },
+  { type: 'youtube', id: 'pFqzQVslXfo' },
+  { type: 'youtube', id: '3yXF5QqdWew' },
+  { type: 'youtube', id: 'se3Ty58bwpQ' },
+  { type: 'youtube', id: 'ACw2iWUUpvw' },
+  { type: 'youtube', id: 'gRakh-64-Jc' },
+  { type: 'youtube', id: 'XiP_tU5eucA' },
+  { type: 'youtube', id: '_v-50oId8dA' },
+  { type: 'youtube', id: 'eOzYUd7cdEk' },
+  { type: 'youtube', id: '_5vRG7DKijY' },
+  { type: 'youtube', id: 'XXBboQIqRJQ' },
+  { type: 'youtube', id: 'oA4Hw82QckY' },
+  { type: 'youtube', id: 'UzNpjA_UpRE' },
+  { type: 'youtube', id: '5VpDSS7WnRE' },
+  { type: 'youtube', id: '4NWYpucSqU8' },
+  { type: 'youtube', id: 'UQxIUBZvnIk' },
+  { type: 'drive', id: '1c9w5VGGA1AmBA9Yo6-SoUEiCcIFWeO6x' },
+  { type: 'drive', id: '10uQ-ek1UnxI9fNgqYU6TTn3qwWFSEWQA' },
+  { type: 'drive', id: '17xuif9tEpzToY1OiGulIMrCCL_-NPiyF' },
+  { type: 'drive', id: '1mmyA-aqGbalg9GTOjuMaiYb8PCzvxBhA' }
+];
+
+const grid = document.getElementById('videoGrid');
+
+videos.forEach(video => {
+  const div = document.createElement('div');
+  div.className = 'video-thumb';
+
+  if (video.type === 'youtube') {
+    // Lazy-load thumbnail first
+    const img = document.createElement('img');
+    img.src = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+    img.alt = "video thumbnail";
+    div.appendChild(img);
+
+    // Click to replace thumbnail with iframe
+    div.addEventListener('click', () => {
+      div.innerHTML = `<iframe src="https://www.youtube.com/embed/${video.id}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+    });
+  } else if (video.type === 'drive') {
+    const img = document.createElement('img');
+    img.src = 'https://upload.wikimedia.org/wikipedia/commons/7/70/YouTube_play_button_icon_(white).svg';
+    div.appendChild(img);
+
+    div.addEventListener('click', () => {
+      div.innerHTML = `<iframe src="https://drive.google.com/file/d/${video.id}/preview" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+    });
+  }
+
+  grid.appendChild(div);
+});
+</script>
+
+</body>
+</html>
